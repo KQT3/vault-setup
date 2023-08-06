@@ -26,6 +26,7 @@ services:
     volumes:
       - ./vault-config:/vault/config
       - ./vault-data:/vault/file
+      - ./tls:/vault/tls
     cap_add:
       - IPC_LOCK
     environment:
