@@ -1,6 +1,7 @@
 # docker-compose up -d
-# docker-compose down && sudo chown -R work .
+# docker-compose down
 # sudo chown -R work .
+# sudo chown -R systemd-network .
 
 version: '3.9'
 
