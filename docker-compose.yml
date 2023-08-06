@@ -1,0 +1,43 @@
+# docker-compose up -d
+# docker-compose down && sudo chown -R work .
+# sudo chown -R work .
+
+version: '3.9'
+
+services:
+  consul:
+     image: hashicorp/consul:1.16
+     container_name: consul
+     ports:
+       - "8500:8500"
+       - "8600:8600/udp"
+     volumes:
+       - ./consul-data:/consul/data
+     command: agent -server -bootstrap-expect=1 -data-dir=/consul/data -client=0.0.0.0 -ui
+     networks:
+       - chaincue-tech-net
+
+  vault:
+    image: hashicorp/vault:1.14
+    container_name: vault
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./vault-config:/vault/config
+      - ./vault-data:/vault/file
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      - VAULT_API_ADDR=http://127.0.0.1:8200
+    command:
+      - "server"
+    depends_on:
+      - consul
+    networks:
+      - chaincue-tech-net
+
+networks:
+  chaincue-tech-net:
+    name: chaincue-tech-net
+    driver: bridge
